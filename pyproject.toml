@@ -1,0 +1,10 @@
+[project]
+name = "crawlerwechataccount"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "adbutils[apk]>=2.9.4",
+    "rich>=14.1.0",
+    "uiautomator2>=3.4.0",
+]

@@ -1,0 +1,5 @@
+.DS_Store
+app.log
+__pycache__
+.venv
+public_accounts.csv
