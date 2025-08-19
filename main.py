@@ -8,7 +8,7 @@ import logging
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Set, Optional, Tuple
+from typing import Set, Optional, Tuple, List
 
 import uiautomator2 as u2
 from uiautomator2 import Device
@@ -29,14 +29,6 @@ class PublicAccount:
 
 class WeChatAutomation:
     """微信公众号自动化类"""
-
-    REGIONS = [
-        "内蒙古自治区", "辽宁省", "吉林省", "黑龙江省", "上海市", "江苏省",
-        "浙江省", "安徽省", "福建省", "江西省", "山东省", "河南省",
-        "湖北省", "湖南省", "广东省", "广西壮族自治区", "海南省", "重庆市",
-        "四川省", "贵州省", "云南省", "西藏自治区", "陕西省", "甘肃省",
-        "青海省", "宁夏回族自治区", "新疆维吾尔自治区"
-    ]
 
     XPATH_SELECTORS = {
         'search_icon': '//*[@content-desc="搜索"]',
@@ -404,13 +396,13 @@ class WeChatAutomation:
         else:
             self.logger.info("当前页面无更多包含'法院'的公众号")
 
-    def run_all_regions(self) -> None:
+    def run_regions(self, regions: List[str]) -> None:
         """运行所有地区的公众号搜索"""
         self.logger.info("开始批量处理所有地区")
 
-        for i, region in enumerate(self.REGIONS, 1):
+        for i, region in enumerate(regions, 1):
             try:
-                self.logger.info(f"处理进度: {i}/{len(self.REGIONS)} - {region}")
+                self.logger.info(f"处理进度: {i}/{len(regions)} - {region}")
                 self._search_region_courts(region)
             except Exception as e:
                 self.logger.error(f"处理 {region} 时发生错误: {e}")
@@ -420,10 +412,6 @@ class WeChatAutomation:
 
     def run_single_region(self, region: str) -> None:
         """运行单个地区的公众号搜索"""
-        if region not in self.REGIONS:
-            self.logger.error(f"不支持的地区: {region}")
-            return
-
         try:
             self._search_region_courts(region)
         except Exception as e:
@@ -440,8 +428,16 @@ def main():
         max_swipe_retries=3
     )
 
+    REGIONS = [
+        "内蒙古自治区", "辽宁省", "吉林省", "黑龙江省", "上海市", "江苏省",
+        "浙江省", "安徽省", "福建省", "江西省", "山东省", "河南省",
+        "湖北省", "湖南省", "广东省", "广西壮族自治区", "海南省", "重庆市",
+        "四川省", "贵州省", "云南省", "西藏自治区", "陕西省", "甘肃省",
+        "青海省", "宁夏回族自治区", "新疆维吾尔自治区"
+    ]
+
     # 运行所有地区
-    automation.run_all_regions()
+    automation.run_regions(REGIONS)
 
     # 或者运行单个地区
     # automation.run_single_region("广东省")
